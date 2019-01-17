@@ -149,8 +149,8 @@ int main(int argc, char **argv)
         }
     } else {
         if (fSigma > 0.0f && fSigma <= 25.0f) {
-            win = 1;
-            bloc = 10;
+            win = 1;   // patch_size= 2*win + 1
+            bloc = 10; // search_size = 2*bloc + 1
             fFiltPar = 0.55f;
         } else if (fSigma > 25.0f && fSigma <= 55.0f) {
             win = 2;

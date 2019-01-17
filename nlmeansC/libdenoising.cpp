@@ -68,7 +68,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     // auxiliary variable
     // number of denoised values per pixel
     float *fpCount = new float[iwxh];
-    fpClear(fpCount, 0.0f,iwxh);
+    fpClear(fpCount, 0.0f, iwxh);
 
     // clear output
     for (int ii=0; ii < iChannels; ii++) fpClear(fpO[ii], 0.0f, iwxh);
@@ -86,7 +86,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
 
             for (int x=0 ; x < iWidth;  x++) {
                 // reduce the size of the comparison window if we are near the boundary
-                int iDWin0 = MIN(iDWin, MIN(iWidth-1-x, MIN(iHeight-1-y, MIN(x,y))));
+                int iDWin0 = MIN(iDWin, MIN(iWidth-1-x, MIN(iHeight-1-y, MIN(x, y))));
 
                 // research zone depending on the boundary and the size of the window
                 int imin = MAX(x-iDBloc, iDWin0);
@@ -104,8 +104,8 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                 // sum of weights
                 float fTotalWeight = 0.0f;
 
-                for (int j=jmin; j <= jmax; j++)
-                    for (int i=imin ; i <= imax; i++)
+                for (int j=jmin; j <= jmax; j++) {
+                    for (int i=imin ; i <= imax; i++) {
                         if (i!=x || j!=y) {
                             float fDif = fiL2FloatDist(fpI, fpI, x, y, i, j, iDWin0, iChannels, iWidth, iWidth);
 
@@ -132,15 +132,17 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                                 }
                             }
                         }
+                    } // i <+ imax
+                } // j <= jmax
 
                 // current patch with fMaxWeight
                 for (int is=-iDWin0; is <=iDWin0; is++) {
                     int aiindex = (iDWin+is) * ihwl + iDWin;
-                    int ail=(y+is)*iWidth+x;
+                    int ail = (y+is)*iWidth+x;
 
                     for (int ir=-iDWin0; ir <= iDWin0; ir++) {
                         int iindex = aiindex + ir;
-                        int il=ail+ir;
+                        int il = ail+ir;
 
                         for (int ii=0; ii < iChannels; ii++)
                             fpODenoised[ii][iindex] += fMaxWeight * fpI[ii][il];
@@ -153,7 +155,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                 if (fTotalWeight > fTiny) {
                     for (int is=-iDWin0; is <=iDWin0; is++) {
                         int aiindex = (iDWin+is) * ihwl + iDWin;
-                        int ail=(y+is)*iWidth+x;
+                        int ail = (y+is)*iWidth+x;
 
                         for (int ir=-iDWin0; ir <= iDWin0; ir++) {
                             int iindex = aiindex + ir;
@@ -175,7 +177,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     }
 
     for (int ii=0; ii < iwxh; ii++)
-        if (fpCount[ii]>0.0) {
+        if (fpCount[ii] > 0.0) {
             for (int jj=0; jj < iChannels; jj++)  fpO[jj][ii] /= fpCount[ii];
         } else {
             for (int jj=0; jj < iChannels; jj++)  fpO[jj][ii] = fpI[jj][ii];

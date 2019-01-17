@@ -61,7 +61,7 @@ float fiL2FloatDist(float **u0, float **u1, int i0, int j0, int i1, int j1, int 
     float dif = 0.0f;
 
     for (int ii=0; ii < channels; ii++) {
-        dif += fiL2FloatDist(u0[ii],u1[ii],i0,j0,i1,j1,radius,width0, width1);
+        dif += fiL2FloatDist(u0[ii], u1[ii], i0, j0, i1, j1, radius, width0, width1);
     }
 
     return dif;
