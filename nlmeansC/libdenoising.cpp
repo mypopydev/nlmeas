@@ -42,27 +42,28 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                   float fFiltPar,       // Filtering parameter
                   float **fpI,          // Input
                   float **fpO,          // Output
-                  int iChannels, int iWidth,int iHeight) {
+                  int iChannels, int iWidth,int iHeight)
+{
     // length of each channel
     int iwxh = iWidth * iHeight;
 
     //  length of comparison window
-    int ihwl = (2*iDWin+1);
-    int iwl = (2*iDWin+1) * (2*iDWin+1);
-    int icwl = iChannels * iwl;
+    int ihwl = (2*iDWin+1);              // patch_size
+    int iwl = (2*iDWin+1) * (2*iDWin+1); // patch_size^2
+    int icwl = iChannels * iwl;          // 3 * patch_size^2
 
     // filtering parameter
-    float fSigma2 = fSigma * fSigma;
-    float fH = fFiltPar * fSigma;
-    float fH2 = fH * fH;
+    float fSigma2 = fSigma * fSigma; // sigma^2
+    float fH = fFiltPar * fSigma;    // h = sigma * 0.55
+    float fH2 = fH * fH;             // h^2
 
     // multiply by size of patch, since distances are not normalized
-    fH2 *= (float) icwl;
+    fH2 *= (float) icwl;             // 3 * patch_size^2 * h^2
 
     // tabulate exp(-x), faster than using directly function expf
     int iLutLength = (int) rintf((float) LUTMAX * (float) LUTPRECISION);
     float *fpLut = new float[iLutLength];
-    wxFillExpLut(fpLut,iLutLength);
+    wxFillExpLut(fpLut, iLutLength);
 
     // auxiliary variable
     // number of denoised values per pixel
@@ -85,14 +86,14 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
 
             for (int x=0 ; x < iWidth;  x++) {
                 // reduce the size of the comparison window if we are near the boundary
-                int iDWin0 = MIN(iDWin,MIN(iWidth-1-x,MIN(iHeight-1-y,MIN(x,y))));
+                int iDWin0 = MIN(iDWin, MIN(iWidth-1-x, MIN(iHeight-1-y, MIN(x,y))));
 
                 // research zone depending on the boundary and the size of the window
-                int imin=MAX(x-iDBloc,iDWin0);
-                int jmin=MAX(y-iDBloc,iDWin0);
+                int imin = MAX(x-iDBloc, iDWin0);
+                int jmin = MAX(y-iDBloc, iDWin0);
 
-                int imax=MIN(x+iDBloc,iWidth-1-iDWin0);
-                int jmax=MIN(y+iDBloc,iHeight-1-iDWin0);
+                int imax = MIN(x+iDBloc, iWidth-1-iDWin0);
+                int jmax = MIN(y+iDBloc, iHeight-1-iDWin0);
 
                 //  clear current denoised patch
                 for (int ii=0; ii < iChannels; ii++) fpClear(fpODenoised[ii], 0.0f, iwl);
@@ -106,13 +107,13 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                 for (int j=jmin; j <= jmax; j++)
                     for (int i=imin ; i <= imax; i++)
                         if (i!=x || j!=y) {
-                            float fDif = fiL2FloatDist(fpI,fpI,x,y,i,j,iDWin0,iChannels,iWidth,iWidth);
+                            float fDif = fiL2FloatDist(fpI, fpI, x, y, i, j, iDWin0, iChannels, iWidth, iWidth);
 
                             // dif^2 - 2 * fSigma^2 * N      dif is not normalized
                             fDif = MAX(fDif - 2.0f * (float) icwl *  fSigma2, 0.0f);
                             fDif = fDif / fH2;
 
-                            float fWeight = wxSLUT(fDif,fpLut);
+                            float fWeight = wxSLUT(fDif, fpLut);
 
                             if (fWeight > fMaxWeight) fMaxWeight = fWeight;
 
@@ -156,7 +157,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
 
                         for (int ir=-iDWin0; ir <= iDWin0; ir++) {
                             int iindex = aiindex + ir;
-                            int il=ail+ ir;
+                            int il = ail+ ir;
 
                             fpCount[il]++;
 
