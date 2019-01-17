@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2009-2011, A. Buades <toni.buades@uib.es>
  * All rights reserved.
@@ -36,14 +35,9 @@
  *
  */
 
-
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-
 
 #include "libdenoising.h"
 #include "io_png.h"
@@ -55,7 +49,6 @@
  * @verbinclude README.txt
  */
 
-
 /**
  * @file   nlmeansIpol.cpp
  * @brief  Main executable file
@@ -66,20 +59,13 @@
  */
 
 
-
-
-
-
 // usage: nlmeans_ipol image sigma noisy denoised
-
-int main(int argc, char **argv) {
-
-
+int main(int argc, char **argv)
+{
     if (argc < 5) {
         printf("usage: nlmeans_ipol image sigma noisy denoised \n");
         exit(-1);
     }
-
 
     // read input
     size_t nx,ny,nc;
@@ -89,9 +75,6 @@ int main(int argc, char **argv) {
         printf("error :: %s not found  or not a correct png image \n", argv[1]);
         exit(-1);
     }
-
-
-
 
     // variables
     int d_w = (int) nx;
@@ -107,11 +90,8 @@ int main(int argc, char **argv) {
     int d_wh = d_w * d_h;
     int d_whc = d_c * d_w * d_h;
 
-
-
     // test if image is really a color image even if it has more than one channel
     if (d_c > 1) {
-
         // dc equals 3
         int i=0;
         while (i < d_wh && d_v[i] == d_v[d_wh + i] && d_v[i] == d_v[2 * d_wh + i ])  {
@@ -119,10 +99,7 @@ int main(int argc, char **argv) {
         }
 
         if (i == d_wh) d_c = 1;
-
     }
-
-
 
     // add noise
     float fSigma = atof(argv[2]);
@@ -132,96 +109,64 @@ int main(int argc, char **argv) {
         fiAddNoise(&d_v[i * d_wh], &noisy[i * d_wh], fSigma, i, d_wh);
     }
 
-
-
-
-
     // denoise
     float **fpI = new float*[d_c];
     float **fpO = new float*[d_c];
     float *denoised = new float[d_whc];
 
     for (int ii=0; ii < d_c; ii++) {
-
         fpI[ii] = &noisy[ii * d_wh];
         fpO[ii] = &denoised[ii * d_wh];
-
     }
-
-
-
 
     int bloc, win;
     float fFiltPar;
 
     if (d_c == 1) {
-
         if (fSigma > 0.0f && fSigma <= 15.0f) {
             win = 1;
             bloc = 10;
             fFiltPar = 0.4f;
-
         } else if ( fSigma > 15.0f && fSigma <= 30.0f) {
             win = 2;
             bloc = 10;
             fFiltPar = 0.4f;
-
         } else if ( fSigma > 30.0f && fSigma <= 45.0f) {
             win = 3;
             bloc = 17;
             fFiltPar = 0.35f;
-
         } else if ( fSigma > 45.0f && fSigma <= 75.0f) {
             win = 4;
             bloc = 17;
             fFiltPar = 0.35f;
-
         } else if (fSigma <= 100.0f) {
-
             win = 5;
             bloc = 17;
             fFiltPar = 0.30f;
-
         } else {
             printf("error :: algorithm parametrized only for values of sigma less than 100.0\n");
             exit(-1);
         }
-
-
-
-
-
     } else {
-
-
         if (fSigma > 0.0f && fSigma <= 25.0f) {
             win = 1;
             bloc = 10;
             fFiltPar = 0.55f;
-
         } else if (fSigma > 25.0f && fSigma <= 55.0f) {
             win = 2;
             bloc = 17;
             fFiltPar = 0.4f;
-
         } else if (fSigma <= 100.0f) {
             win = 3;
             bloc = 17;
             fFiltPar = 0.35f;
-
         } else {
             printf("error :: algorithm parametrized only for values of sigma less than 100.0\n");
             exit(-1);
         }
-
-
-
     }
 
-
-
     nlmeans_ipol(win, bloc, fSigma, fFiltPar, fpI,  fpO, d_c, d_w, d_h);
-
 
     // save noisy and denoised images
     if (io_png_write_f32(argv[3], noisy, (size_t) d_w, (size_t) d_h, (size_t) d_c) != 0) {
@@ -231,11 +176,5 @@ int main(int argc, char **argv) {
     if (io_png_write_f32(argv[4], denoised, (size_t) d_w, (size_t) d_h, (size_t) d_c) != 0) {
         printf("... failed to save png image %s", argv[4]);
     }
-
-
-
-
 }
-
-
 
