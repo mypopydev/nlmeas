@@ -78,7 +78,6 @@ pseudo-random seed)\n");
  */
 
 float SetParam_a(size_t Nc, double sigma)
-
 {
   float a10;        /* Parameter of the Gaussian Euclidean norm, multiplied
                        by a factor 10 to follow the chosen quantization 
@@ -87,47 +86,48 @@ float SetParam_a(size_t Nc, double sigma)
 		       Set 0 for plain Euclidean norm (NLM-P).*/
 
   switch (Nc) {
-    
   case 1:
-    if (sigma<=1) a10=7;
-    else
-      if (sigma<3) a10=8;
+      if (sigma<=1)
+          a10=7;
+      else if (sigma<3)
+          a10=8;
+      else if (sigma<=4)
+          a10=9;
+      else if (sigma<=5)
+          a10=10;
+      else if (sigma<=7)
+          a10=11;
+      else if (sigma<=9)
+          a10=13;
+      else if (sigma<=13)
+          a10=14;
+      else if (sigma<=18)
+          a10=16;
+      else if (sigma<=19)
+          a10=17;
       else
-	if (sigma<=4) a10=9;
-	else
-	  if (sigma<=5) a10=10;
-	  else
-	    if (sigma<=7) a10=11;
-	    else
-	      if (sigma<=9) a10=13;
-	      else
-		if (sigma<=13) a10=14;
-		else
-		  if (sigma<=18) a10=16;
-		  else
-		    if (sigma<=19) a10=17;
-		    else
-		      a10=sigma;
-    break;
+          a10=sigma;
+      break;
 
   case 3:
-    if (sigma<=3) a10=sigma+2;
-    else
-      if (sigma<=6) a10=sigma+1;
+      if (sigma<=3)
+          a10=sigma+2;
+      else if (sigma<=6)
+          a10=sigma+1;
+      else if (sigma<=9)
+          a10=7;
+      else if (sigma<=13)
+          a10=10;
+      else if (sigma<=19)
+          a10=11;
       else
-	if (sigma<=9) a10=7;
-	else
-	  if (sigma<=13) a10=10;
-	  else
-	    if (sigma<=19) a10=11;
-	    else
-	      a10=sigma;
-    break;
+          a10=sigma;
+      break;
 
   default:
-    fprintf(stderr,"Invalid Nc=%d value\n",(int)Nc);
-    exit(EXIT_FAILURE);       
-    break;
+      fprintf(stderr,"Invalid Nc=%d value\n",(int)Nc);
+      exit(EXIT_FAILURE);       
+      break;
   }
   return(a10/10.0);
 }
@@ -249,30 +249,20 @@ float SetParam_h(size_t Nc, double sigma, float a)
     if (a==0) /* NLM-P */
       {
 	if (sigma<=7)  hf=15;
-	else
-	  if (sigma<=9)  hf=14;
-	  else
-	    if (sigma<=19) hf=13;
-	    else
-	      if (sigma<=28) hf=11;
-	      else
-		hf=10;
+	else if (sigma<=9)  hf=14;
+	else if (sigma<=19) hf=13;
+	else if (sigma<=28) hf=11;
+        else hf=10;
       }
     else /* NLM-Pa */
       {
 	if (sigma<=5)  hf=17;
-	else
-	  if (sigma<=7)  hf=16;
-	  else
-	    if (sigma<=9)  hf=14;
-	    else
-	      if (sigma<=19) hf=13;
-	      else
-		if (sigma<=20) hf=12;
-		else
-		  if (sigma<=28) hf=11;
-		  else
-		    hf=10;
+	else if (sigma<=7)  hf=16;
+        else if (sigma<=9)  hf=14;
+        else if (sigma<=19) hf=13;
+        else if (sigma<=20) hf=12;
+	else if (sigma<=28) hf=11;
+	else hf=10;
       }
     break;
 
@@ -280,34 +270,22 @@ float SetParam_h(size_t Nc, double sigma, float a)
     if (a==0) /* NLM-P */
       {
 	if (sigma<=3)  hf=15;
-	else
-	  if (sigma<=8)  hf=14;
-	  else
-	    if (sigma<=9)  hf=13;
-	    else
-	      if (sigma<=17) hf=12;
-	      else
-		if (sigma<=24) hf=11;
-		else
-		  if (sigma<=46) hf=10;
-		  else
-		    hf=9;
+	else if (sigma<=8)  hf=14;
+        else if (sigma<=9)  hf=13;
+        else if (sigma<=17) hf=12;
+        else if (sigma<=24) hf=11;
+        else if (sigma<=46) hf=10;
+        else hf=9;
       }
     else /* NLM-Pa */
       {
 	if (sigma<=4)  hf=16;
-	else
-	  if (sigma<=5)  hf=15;
-	  else
-	    if (sigma<=9)  hf=14;
-	    else
-	      if (sigma<=19) hf=12;
-	      else
-		if (sigma<=24) hf=11;
-		else
-		  if (sigma<=46) hf=10;
-		  else
-		    hf=9;
+	else if (sigma<=5)  hf=15;
+        else if (sigma<=9)  hf=14;
+	else if (sigma<=19) hf=12;
+        else if (sigma<=24) hf=11;
+        else if (sigma<=46) hf=10;
+	else hf=9;
       }
     break;
 
