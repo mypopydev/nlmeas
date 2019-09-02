@@ -3,7 +3,7 @@
 Plot the DCT basis functions.
 """
 __author__ = 'Emil Mikulic <emikulic@gmail.com>'
-import Image # sudo apt-get install python-imaging
+from PIL import Image # sudo apt-get install python-pil
 import numpy as np
 import matplotlib.pyplot as plt # sudo apt-get install python-matplotlib
 import matplotlib.gridspec as gridspec
@@ -62,9 +62,10 @@ def main():
   fig.tight_layout()
   fig.canvas.draw()
   w, h = fig.canvas.get_width_height()
-  figimg = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+  #figimg = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+  figimg = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
   Image.fromarray(figimg.reshape((h, w, 3))).save(out_fn)
-  print 'wrote', out_fn
+  print ('wrote', out_fn)
 
 if __name__ == '__main__':
   main()
