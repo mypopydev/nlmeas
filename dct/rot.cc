@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 
 void rot1(const double x1, const double y1, const double theta,
           double* x2, double* y2) {

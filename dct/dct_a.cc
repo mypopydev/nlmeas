@@ -1,4 +1,5 @@
 // https://unix4lyfe.org/dct-1d/
+// gcc -S -O3 -march=core-avx-i -masm=intel dct_a.cc
 #include <math.h>
 
 void dct_ii(int N, const double x[], double X[])
@@ -24,7 +25,7 @@ void idct(int N, const double X[], double x[])
         x[n] = sum * sqrt(2. / N);
     }
 }
-
+#if 0
 int main(int argc, char *argv[])
 {
     double x[8] = {20, 60, 10. -90, 80, 120, 20, 115};
@@ -37,4 +38,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
+#endif

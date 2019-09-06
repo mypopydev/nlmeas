@@ -1,5 +1,7 @@
 // https://unix4lyfe.org/dct-1d/
-#include <cmath>
+// gcc -S -O3 -march=core-avx-i -masm=intel llm_dct.cc
+//  cat llm_dct.s | awk '{print $1}' | grep 'v....d' | sort | uniq -c
+#include <math.h>
 
 // Implementation of LLM DCT.
 void llm_dct(const double in[8], double out[8]) {

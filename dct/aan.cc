@@ -1,5 +1,8 @@
 // https://unix4lyfe.org/dct-1d/
-#include <cmath>
+// gcc -S -O3 -march=core-avx-i -masm=intel aan.cc
+// gcc -S -O3 -ffast-math -march=core-avx-i -masm=intel aan.cc
+//  cat aan.s | awk '{print $1}' | grep 'v....d' | sort | uniq -c
+#include <math.h>
 
 void aan_dct(const double i[], double o[]) {
 #if 1
@@ -103,8 +106,8 @@ void aan_dct(const double i[], double o[]) {
 }
 
 #if 0
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include "dct_a.cc"
 
 void print(const double d[8]) {

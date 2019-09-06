@@ -5,6 +5,8 @@
 //
 // In particular, the /sqrt(8) scaling was added.
 //
+// gcc -S -O3 -march=core-avx-i -masm=intel llm_mit.cc
+//  cat llm_mit.s | awk '{print $1}' | grep 'v....d' | sort | uniq -c
 void llm_mit(const double in[8], double out[8]) {
   double x0,x1,x2,x3,x4,x5,x6,x7,x8;
 
